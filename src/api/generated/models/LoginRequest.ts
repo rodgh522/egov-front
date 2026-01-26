@@ -31,12 +31,6 @@ export interface LoginRequest {
      * @memberof LoginRequest
      */
     password: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof LoginRequest
-     */
-    tenantId: string;
 }
 
 /**
@@ -45,7 +39,6 @@ export interface LoginRequest {
 export function instanceOfLoginRequest(value: object): value is LoginRequest {
     if (!('userId' in value) || value['userId'] === undefined) return false;
     if (!('password' in value) || value['password'] === undefined) return false;
-    if (!('tenantId' in value) || value['tenantId'] === undefined) return false;
     return true;
 }
 
@@ -61,7 +54,6 @@ export function LoginRequestFromJSONTyped(json: any, ignoreDiscriminator: boolea
         
         'userId': json['userId'],
         'password': json['password'],
-        'tenantId': json['tenantId'],
     };
 }
 
@@ -78,7 +70,6 @@ export function LoginRequestToJSONTyped(value?: LoginRequest | null, ignoreDiscr
         
         'userId': value['userId'],
         'password': value['password'],
-        'tenantId': value['tenantId'],
     };
 }
 
