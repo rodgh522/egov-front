@@ -71,9 +71,13 @@ export async function refreshToken(): Promise<string | null> {
     }
 }
 
-export function logout() {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('refreshToken');
-    // Optional: Call server logout API if needed
-    // authApi.logout(); 
+export async function logout() {
+    try {
+        await authApi.logout();
+    } catch (error) {
+        console.error('Logout API failed:', error);
+    } finally {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('refreshToken');
+    }
 }

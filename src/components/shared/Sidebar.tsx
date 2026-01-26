@@ -62,7 +62,7 @@ export function Sidebar() {
                 <div className="flex h-14 items-center border-b border-sidebar-border px-6">
                     <Link href="/" className="flex items-center gap-2 font-semibold text-sidebar-foreground">
                         <Package2 className="h-6 w-6 text-sidebar-primary" />
-                        <span>Firebase Logic</span>
+                        <span>Welcome</span>
                     </Link>
                 </div>
                 <ScrollArea className="flex-1 py-4">
@@ -93,8 +93,7 @@ export function Sidebar() {
                 <div className="mt-auto p-4 border-t border-sidebar-border">
                     <div className="flex items-center gap-4 px-2 py-2">
                         <div className="flex flex-col">
-                            <span className="text-xs text-sidebar-foreground/70">Spark Plan</span>
-                            <span className="text-sm font-medium text-sidebar-foreground">$0/month</span>
+
                         </div>
                     </div>
                 </div>

@@ -3,6 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+    useAuth
+} from "@/context/AuthContext";
+import {
     Breadcrumb,
     BreadcrumbItem,
     BreadcrumbLink,
@@ -25,6 +28,7 @@ import { PanelLeft, Search, User } from "lucide-react";
 import React from "react";
 
 export function Header() {
+    const { signOut } = useAuth();
     const pathname = usePathname();
     const segments = pathname.split('/').filter(Boolean);
 
@@ -70,7 +74,7 @@ export function Header() {
                     <DropdownMenuItem>Settings</DropdownMenuItem>
                     <DropdownMenuItem>Support</DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Logout</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => signOut()}>Logout</DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
         </header>
