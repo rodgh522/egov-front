@@ -1,4 +1,4 @@
-import { Configuration } from '@/api/generated';
+import { Configuration, UserManagementApi } from '@/api/generated';
 
 const BASE_PATH = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
@@ -9,3 +9,5 @@ export const apiConfig = new Configuration({
         return token || '';
     },
 });
+
+export const userManagementApi = new UserManagementApi(apiConfig);
