@@ -11,7 +11,7 @@ export async function fetchUserMenus(): Promise<MenuItem[]> {
     return buildMenuTree(menus);
 }
 
-function buildMenuTree(menus: MenuResponse[]): MenuItem[] {
+export function buildMenuTree(menus: MenuResponse[]): MenuItem[] {
     const menuMap = new Map<number, MenuItem>();
     const roots: MenuItem[] = [];
 
