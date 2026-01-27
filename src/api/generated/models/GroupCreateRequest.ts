@@ -24,12 +24,6 @@ export interface GroupCreateRequest {
      * @type {string}
      * @memberof GroupCreateRequest
      */
-    groupId: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof GroupCreateRequest
-     */
     groupName: string;
     /**
      * 
@@ -67,7 +61,6 @@ export interface GroupCreateRequest {
  * Check if a given object implements the GroupCreateRequest interface.
  */
 export function instanceOfGroupCreateRequest(value: object): value is GroupCreateRequest {
-    if (!('groupId' in value) || value['groupId'] === undefined) return false;
     if (!('groupName' in value) || value['groupName'] === undefined) return false;
     if (!('groupCode' in value) || value['groupCode'] === undefined) return false;
     if (!('branchId' in value) || value['branchId'] === undefined) return false;
@@ -84,7 +77,6 @@ export function GroupCreateRequestFromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'groupId': json['groupId'],
         'groupName': json['groupName'],
         'groupCode': json['groupCode'],
         'groupDescription': json['groupDescription'] == null ? undefined : json['groupDescription'],
@@ -105,7 +97,6 @@ export function GroupCreateRequestToJSONTyped(value?: GroupCreateRequest | null,
 
     return {
         
-        'groupId': value['groupId'],
         'groupName': value['groupName'],
         'groupCode': value['groupCode'],
         'groupDescription': value['groupDescription'],

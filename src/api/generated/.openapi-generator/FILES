@@ -2,6 +2,7 @@ apis/AuthenticationApi.ts
 apis/BranchControllerApi.ts
 apis/GroupControllerApi.ts
 apis/MenuControllerApi.ts
+apis/PositionControllerApi.ts
 apis/TenantControllerApi.ts
 apis/UserManagementApi.ts
 apis/index.ts
@@ -25,6 +26,9 @@ models/MenuUpdateRequest.ts
 models/PageUserResponse.ts
 models/PageableObject.ts
 models/PasswordChangeRequest.ts
+models/PositionCreateRequest.ts
+models/PositionResponse.ts
+models/PositionUpdateRequest.ts
 models/RefreshTokenRequest.ts
 models/RoleInfo.ts
 models/SortObject.ts

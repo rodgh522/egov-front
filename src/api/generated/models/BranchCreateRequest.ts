@@ -24,12 +24,6 @@ export interface BranchCreateRequest {
      * @type {string}
      * @memberof BranchCreateRequest
      */
-    branchId: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof BranchCreateRequest
-     */
     branchName: string;
     /**
      * 
@@ -73,7 +67,6 @@ export interface BranchCreateRequest {
  * Check if a given object implements the BranchCreateRequest interface.
  */
 export function instanceOfBranchCreateRequest(value: object): value is BranchCreateRequest {
-    if (!('branchId' in value) || value['branchId'] === undefined) return false;
     if (!('branchName' in value) || value['branchName'] === undefined) return false;
     if (!('branchCode' in value) || value['branchCode'] === undefined) return false;
     return true;
@@ -89,7 +82,6 @@ export function BranchCreateRequestFromJSONTyped(json: any, ignoreDiscriminator:
     }
     return {
         
-        'branchId': json['branchId'],
         'branchName': json['branchName'],
         'branchCode': json['branchCode'],
         'branchAddress': json['branchAddress'] == null ? undefined : json['branchAddress'],
@@ -111,7 +103,6 @@ export function BranchCreateRequestToJSONTyped(value?: BranchCreateRequest | nul
 
     return {
         
-        'branchId': value['branchId'],
         'branchName': value['branchName'],
         'branchCode': value['branchCode'],
         'branchAddress': value['branchAddress'],

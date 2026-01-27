@@ -24,12 +24,6 @@ export interface TenantCreateRequest {
      * @type {string}
      * @memberof TenantCreateRequest
      */
-    tenantId: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof TenantCreateRequest
-     */
     tenantName: string;
     /**
      * 
@@ -49,7 +43,6 @@ export interface TenantCreateRequest {
  * Check if a given object implements the TenantCreateRequest interface.
  */
 export function instanceOfTenantCreateRequest(value: object): value is TenantCreateRequest {
-    if (!('tenantId' in value) || value['tenantId'] === undefined) return false;
     if (!('tenantName' in value) || value['tenantName'] === undefined) return false;
     return true;
 }
@@ -64,7 +57,6 @@ export function TenantCreateRequestFromJSONTyped(json: any, ignoreDiscriminator:
     }
     return {
         
-        'tenantId': json['tenantId'],
         'tenantName': json['tenantName'],
         'tenantDescription': json['tenantDescription'] == null ? undefined : json['tenantDescription'],
         'useAt': json['useAt'] == null ? undefined : json['useAt'],
@@ -82,7 +74,6 @@ export function TenantCreateRequestToJSONTyped(value?: TenantCreateRequest | nul
 
     return {
         
-        'tenantId': value['tenantId'],
         'tenantName': value['tenantName'],
         'tenantDescription': value['tenantDescription'],
         'useAt': value['useAt'],
