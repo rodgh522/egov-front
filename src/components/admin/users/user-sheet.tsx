@@ -99,9 +99,6 @@ export function UserSheet({ open, onOpenChange, user, onSuccess }: UserSheetProp
                         email: values.email,
                         password: values.password,
                         phone: values.phone,
-                        useAt: values.useAt,
-                        // defaults for required fields if missing in form
-                        tenantId: "default",
                     }
                 });
             }

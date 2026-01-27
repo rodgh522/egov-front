@@ -1,5 +1,8 @@
 apis/AuthenticationApi.ts
+apis/BranchControllerApi.ts
+apis/GroupControllerApi.ts
 apis/MenuControllerApi.ts
+apis/TenantControllerApi.ts
 apis/UserManagementApi.ts
 apis/index.ts
 index.ts
@@ -9,6 +12,12 @@ models/ApiResponsePageUserResponse.ts
 models/ApiResponseTokenResponse.ts
 models/ApiResponseUserResponse.ts
 models/ApiResponseVoid.ts
+models/BranchCreateRequest.ts
+models/BranchResponse.ts
+models/BranchUpdateRequest.ts
+models/GroupCreateRequest.ts
+models/GroupResponse.ts
+models/GroupUpdateRequest.ts
 models/LoginRequest.ts
 models/MenuCreateRequest.ts
 models/MenuResponse.ts
@@ -19,6 +28,9 @@ models/PasswordChangeRequest.ts
 models/RefreshTokenRequest.ts
 models/RoleInfo.ts
 models/SortObject.ts
+models/TenantCreateRequest.ts
+models/TenantResponse.ts
+models/TenantUpdateRequest.ts
 models/TokenResponse.ts
 models/UserCreateRequest.ts
 models/UserResponse.ts
