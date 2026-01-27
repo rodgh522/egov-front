@@ -12,16 +12,44 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus } from "lucide-react";
 import { MenuTree } from "@/components/admin/menu/MenuTree";
-import { buildMenuTree, MenuItem } from "@/lib/menu"; // Ensure this import path is correct
+import { buildMenuTree, MenuItem } from "@/lib/menu";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { EditMenuSheet } from "@/components/admin/menu/EditMenuSheet";
 
 export default function MenuManagementPage() {
     const [menus, setMenus] = useState<MenuItem[]>([]);
     const [loading, setLoading] = useState(true);
+
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+
+    const editMenuId = searchParams.get("edit");
+    const isEditSheetOpen = !!editMenuId;
+    const selectedMenuNo = editMenuId ? parseInt(editMenuId) : null;
+
+    // Create sheet state
+    // Create sheet state
+    const [isCreateSheetOpen, setIsCreateSheetOpen] = useState(false);
+    const [createInitialValues, setCreateInitialValues] = useState<{ upperMenuNo?: number; menuOrder?: number }>({});
+
+    // Delete state
+    const [menuToDelete, setMenuToDelete] = useState<number | null>(null);
 
     const api = new MenuControllerApi(apiConfig);
 
@@ -57,18 +85,66 @@ export default function MenuManagementPage() {
     };
 
     const handleEdit = (menu: MenuItem) => {
-        console.log("Edit menu:", menu);
-        // Implement edit modal/drawer here
+        const params = new URLSearchParams(searchParams);
+        if (menu.menuNo) {
+            params.set("edit", menu.menuNo.toString());
+        }
+        router.push(`${pathname}?${params.toString()}`);
+    }
+
+    const handleSheetClose = (open: boolean) => {
+        if (!open) {
+            const params = new URLSearchParams(searchParams);
+            params.delete("edit");
+            router.push(`${pathname}?${params.toString()}`);
+        }
+    }
+
+    const handleSheetSuccess = () => {
+        loadMenus(); // Refresh list to show updates
+        handleSheetClose(false); // Close sheet
+    }
+
+    const handleCreate = () => {
+        setCreateInitialValues({
+            menuOrder: calculateNextOrder(menus) // Default for root
+        });
+        setIsCreateSheetOpen(true);
+    }
+
+    const handleCreateChild = (parent: MenuItem) => {
+        setCreateInitialValues({
+            upperMenuNo: parent.menuNo,
+            menuOrder: calculateNextOrder(parent.children)
+        });
+        setIsCreateSheetOpen(true);
+    }
+
+    const calculateNextOrder = (items: MenuItem[] | undefined): number => {
+        if (!items || items.length === 0) return 0;
+        const maxOrder = Math.max(...items.map(i => i.menuOrder || 0));
+        return maxOrder + 10; // Increment by 10 for spacing
+    }
+
+    const handleCreateSuccess = () => {
+        loadMenus();
+        setIsCreateSheetOpen(false);
     }
 
     const handleDelete = async (menuNo: number) => {
-        if (!confirm("Are you sure you want to delete this menu?")) return;
+        setMenuToDelete(menuNo);
+    }
+
+    const confirmDelete = async () => {
+        if (!menuToDelete) return;
 
         try {
-            await api.deleteMenu({ menuNo });
+            await api.deleteMenu({ menuNo: menuToDelete });
             loadMenus(); // Reload after delete
         } catch (error) {
             console.error("Failed to delete menu:", error);
+        } finally {
+            setMenuToDelete(null);
         }
     }
 
@@ -82,7 +158,7 @@ export default function MenuManagementPage() {
                     </p>
                 </div>
                 <div className="flex items-center gap-2">
-                    <Button>
+                    <Button onClick={handleCreate}>
                         <Plus className="mr-2 h-4 w-4" />
                         Create Menu
                     </Button>
@@ -110,11 +186,44 @@ export default function MenuManagementPage() {
                             items={menus}
                             onReorder={handleReorder}
                             onEdit={handleEdit}
+                            onCreateChild={handleCreateChild}
                             onDelete={handleDelete}
                         />
                     )}
                 </CardContent>
             </Card>
+
+            <EditMenuSheet
+                open={isEditSheetOpen}
+                onOpenChange={handleSheetClose}
+                menuNo={selectedMenuNo}
+                onSuccess={handleSheetSuccess}
+            />
+
+            <EditMenuSheet
+                open={isCreateSheetOpen}
+                onOpenChange={setIsCreateSheetOpen}
+                menuNo={null}
+                initialValues={createInitialValues}
+                onSuccess={handleCreateSuccess}
+            />
+
+            <AlertDialog open={!!menuToDelete} onOpenChange={(open) => !open && setMenuToDelete(null)}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete the menu and all its sub-menus.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                            Delete
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }

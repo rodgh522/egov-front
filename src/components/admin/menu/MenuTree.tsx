@@ -21,10 +21,11 @@ interface MenuTreeProps {
     items: MenuItem[];
     onReorder: (items: MenuItem[]) => void;
     onEdit: (menu: MenuItem) => void;
+    onCreateChild: (menu: MenuItem) => void;
     onDelete: (menuNo: number) => void;
 }
 
-export function MenuTree({ items, onReorder, onEdit, onDelete }: MenuTreeProps) {
+export function MenuTree({ items, onReorder, onEdit, onCreateChild, onDelete }: MenuTreeProps) {
     const [expanded, setExpanded] = useState<number[]>(
         items.flatMap((i) => (i.children && i.children.length > 0 && i.menuNo ? [i.menuNo] : [])).slice(0, 3) // Expand first few by default
     );
@@ -148,6 +149,7 @@ export function MenuTree({ items, onReorder, onEdit, onDelete }: MenuTreeProps) 
                     expanded={expanded}
                     setExpanded={setExpanded}
                     onEdit={onEdit}
+                    onCreateChild={onCreateChild}
                     onDelete={onDelete}
                     allData={items}
                     onListReorder={(newOrder) => onReorder(newOrder)} // Root reorder
@@ -164,6 +166,7 @@ function SortableList({
     expanded,
     setExpanded,
     onEdit,
+    onCreateChild,
     onDelete,
     allData,
     onListReorder
@@ -173,6 +176,7 @@ function SortableList({
     expanded: number[],
     setExpanded: (ids: number[]) => void,
     onEdit: (m: MenuItem) => void,
+    onCreateChild: (m: MenuItem) => void,
     onDelete: (id: number) => void,
     allData: MenuItem[],
     onListReorder: (newOrder: MenuItem[]) => void
@@ -207,6 +211,7 @@ function SortableList({
                             }
                         }}
                         onEdit={onEdit}
+                        onCreateChild={onCreateChild}
                         onDelete={onDelete}
                     />
 
@@ -222,6 +227,7 @@ function SortableList({
                                 expanded={expanded}
                                 setExpanded={setExpanded}
                                 onEdit={onEdit}
+                                onCreateChild={onCreateChild}
                                 onDelete={onDelete}
                                 allData={allData}
                                 onListReorder={() => { }} // Children reorder handled by global onDragEnd

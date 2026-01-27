@@ -9,7 +9,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Edit, MoreHorizontal, Trash2, GripVertical, ChevronRight, ChevronDown } from "lucide-react";
+import { Edit, MoreHorizontal, Trash2, GripVertical, ChevronRight, ChevronDown, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SortableMenuItemProps {
@@ -18,6 +18,7 @@ interface SortableMenuItemProps {
     isOpen: boolean;
     onToggle: () => void;
     onEdit: (menu: MenuItem) => void;
+    onCreateChild: (menu: MenuItem) => void;
     onDelete: (menuNo: number) => void;
 }
 
@@ -27,6 +28,7 @@ export function SortableMenuItem({
     isOpen,
     onToggle,
     onEdit,
+    onCreateChild,
     onDelete,
 }: SortableMenuItemProps) {
     const {
@@ -116,6 +118,10 @@ export function SortableMenuItem({
                     <DropdownMenuItem onClick={() => onEdit(menu)}>
                         <Edit className="mr-2 h-4 w-4" />
                         Edit
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onCreateChild(menu)}>
+                        <Plus className="mr-2 h-4 w-4" />
+                        Create Sub-menu
                     </DropdownMenuItem>
                     <DropdownMenuItem
                         className="text-destructive focus:text-destructive"
