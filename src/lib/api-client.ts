@@ -1,4 +1,4 @@
-import { Configuration, UserManagementApi, TenantControllerApi, BranchControllerApi } from '@/api/generated';
+import { Configuration, UserManagementApi, TenantControllerApi, BranchControllerApi, GroupControllerApi } from '@/api/generated';
 
 const BASE_PATH = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
@@ -13,4 +13,5 @@ export const apiConfig = new Configuration({
 export const userManagementApi = new UserManagementApi(apiConfig);
 export const tenantControllerApi = new TenantControllerApi(apiConfig);
 export const branchControllerApi = new BranchControllerApi(apiConfig);
+export const groupControllerApi = new GroupControllerApi(apiConfig);
 
