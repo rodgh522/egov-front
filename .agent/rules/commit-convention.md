@@ -11,3 +11,4 @@ When generating git commit messages, you MUST follow this format:
 - **Example**: 
   - `[Feat] imply JWT `
   - `[Fix] resolve error for rendering chart in dashboard`
+-- **Allow Command**: $ git -
