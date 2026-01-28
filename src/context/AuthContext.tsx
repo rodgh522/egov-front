@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, fetchCurrentUser, logout } from '@/lib/auth';
 import { MenuItem, fetchUserMenus } from '@/lib/menu';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 interface AuthContextType {
     user: User | null;
@@ -12,7 +12,7 @@ interface AuthContextType {
     hasPermission: (permission: string) => boolean;
     hasMenuAccess: (menuCode: string, action?: string) => boolean;
     refreshUser: () => Promise<void>;
-    signOut: () => void;
+    signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -22,18 +22,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [menus, setMenus] = useState<MenuItem[]>([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
+    const pathname = usePathname();
 
     const loadUser = async () => {
         try {
-            const token = localStorage.getItem('authToken');
-            if (token) {
-                const userData = await fetchCurrentUser();
+            // Restore session from storage (sync-like operation wrapped in promise)
+            const userData = await fetchCurrentUser();
+            if (userData) {
                 setUser(userData);
+
+                // Fetch menus
                 try {
                     const userMenus = await fetchUserMenus();
                     setMenus(userMenus);
                 } catch (menuError) {
                     console.error("Failed to fetch menus", menuError);
+                    // If fetching menus fails due to 401, middleware handles refresh.
+                    // If it still fails, it might be persistent error, but user session is local.
+                    // We keep user logged in but maybe empty menus or retry.
+                    // For now, empty menus.
                     setMenus([]);
                 }
             } else {
@@ -42,9 +49,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             }
         } catch (error) {
             console.error("Failed to load user session", error);
-            // If fetching user fails (e.g. 401), we might want to clear token
-            // But fetchCurrentUser in lib/auth throws, so we catch it here.
-            // We can try to refresh token here if we implement auto-refresh logic
             setUser(null);
             setMenus([]);
         } finally {
@@ -56,19 +60,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loadUser();
     }, []);
 
+    // Effect to redirect logic if needed? 
+    // Usually ProtectedRoute handles this.
+
     const hasPermission = (permission: string): boolean => {
         return user?.permissions?.includes(permission) ?? false;
     };
 
     const hasMenuAccess = (menuCode: string, action: string = 'READ'): boolean => {
-        // Adjust permission string format as per project convention, e.g. "MENU:menuCode:action"
         return hasPermission(`MENU:${menuCode}:${action}`);
     };
 
-    const signOut = () => {
-        logout();
+    const signOut = async () => {
+        // Clear local state immediately for UX
         setUser(null);
         setMenus([]);
+
+        // Call API logout
+        await logout();
+
         router.push('/login');
     };
 
