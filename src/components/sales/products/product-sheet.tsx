@@ -44,8 +44,8 @@ interface ProductSheetProps {
 export function ProductSheet({ open, onOpenChange, product, onSuccess }: ProductSheetProps) {
     const isEditing = !!product;
 
-    const form = useForm<ProductCreateFormValues>({
-        resolver: zodResolver(isEditing ? productUpdateSchema : productCreateSchema),
+    const form = useForm({
+        resolver: zodResolver(productCreateSchema),
         defaultValues: {
             productCode: "",
             productName: "",
@@ -57,8 +57,8 @@ export function ProductSheet({ open, onOpenChange, product, onSuccess }: Product
             currency: "KRW",
             taxRate: 0.1,
             stockQuantity: 0,
-            isActive: "Y",
-            useAt: "Y",
+            isActive: "Y" as "Y" | "N",
+            useAt: "Y" as "Y" | "N",
         },
     });
 
@@ -90,8 +90,8 @@ export function ProductSheet({ open, onOpenChange, product, onSuccess }: Product
                 currency: "KRW",
                 taxRate: 0.1,
                 stockQuantity: 0,
-                isActive: "Y",
-                useAt: "Y",
+                isActive: "Y" as "Y" | "N",
+                useAt: "Y" as "Y" | "N",
             });
         }
     }, [product, form]);

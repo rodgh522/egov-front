@@ -87,7 +87,6 @@ export function TenantSheet({ open, onOpenChange, tenant, onSuccess }: TenantShe
                 // Create
                 await tenantControllerApi.createTenant({
                     tenantCreateRequest: {
-                        tenantId: values.tenantId,
                         tenantName: values.tenantName,
                         tenantDescription: values.tenantDescription,
                         useAt: values.useAt,
