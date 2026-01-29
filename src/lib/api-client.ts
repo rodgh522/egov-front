@@ -1,4 +1,4 @@
-import { Configuration, UserManagementApi, TenantControllerApi, BranchControllerApi, GroupControllerApi, PositionControllerApi, CustomerControllerApi, OpportunityControllerApi, PipelineStageControllerApi, LeadControllerApi, ProductControllerApi, QuoteControllerApi } from '@/api/generated';
+import { Configuration, UserManagementApi, TenantControllerApi, BranchControllerApi, GroupControllerApi, PositionControllerApi, CustomerControllerApi, OpportunityControllerApi, PipelineStageControllerApi, LeadControllerApi, ProductControllerApi, QuoteControllerApi, ActivityControllerApi } from '@/api/generated';
 import { authMiddleware } from './auth-middleware';
 import { getAccessToken } from './auth-utils';
 
@@ -23,5 +23,7 @@ export const pipelineStageControllerApi = new PipelineStageControllerApi(apiConf
 export const leadControllerApi = new LeadControllerApi(apiConfig);
 export const productControllerApi = new ProductControllerApi(apiConfig);
 export const quoteControllerApi = new QuoteControllerApi(apiConfig);
+export const activityControllerApi = new ActivityControllerApi(apiConfig);
+
 
 
