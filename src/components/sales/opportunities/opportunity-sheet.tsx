@@ -31,8 +31,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-import { OpportunityResponse, CustomerResponse } from "@/api/generated";
-import { opportunityControllerApi, customerControllerApi } from "@/lib/api-client";
+import { OpportunityResponse, CustomerResponse, PipelineStageResponse } from "@/api/generated";
+import { opportunityControllerApi, customerControllerApi, pipelineStageControllerApi } from "@/lib/api-client";
 import {
     opportunityCreateSchema,
     opportunityUpdateSchema,
@@ -46,31 +46,27 @@ interface OpportunitySheetProps {
     onSuccess: () => void;
 }
 
-const STAGES = [
-    { value: "PROSPECTING", label: "Prospecting" },
-    { value: "QUALIFICATION", label: "Qualification" },
-    { value: "PROPOSAL", label: "Proposal" },
-    { value: "NEGOTIATION", label: "Negotiation" },
-    { value: "CLOSED_WON", label: "Closed Won" },
-    { value: "CLOSED_LOST", label: "Closed Lost" },
-];
-
 export function OpportunitySheet({ open, onOpenChange, opportunity, onSuccess }: OpportunitySheetProps) {
     const isEditing = !!opportunity;
     const [customers, setCustomers] = useState<CustomerResponse[]>([]);
+    const [stages, setStages] = useState<PipelineStageResponse[]>([]);
 
     useEffect(() => {
-        const fetchCustomers = async () => {
+        const fetchData = async () => {
             try {
-                const data = await customerControllerApi.getAllCustomers();
-                setCustomers(data);
+                const [customerData, stageData] = await Promise.all([
+                    customerControllerApi.getAllCustomers(),
+                    pipelineStageControllerApi.getActiveStagesOrdered()
+                ]);
+                setCustomers(customerData);
+                setStages(stageData);
             } catch (error) {
-                console.error("Failed to fetch customers:", error);
+                console.error("Failed to fetch data:", error);
             }
         };
 
         if (open) {
-            fetchCustomers();
+            fetchData();
         }
     }, [open]);
 
@@ -110,7 +106,7 @@ export function OpportunitySheet({ open, onOpenChange, opportunity, onSuccess }:
             form.reset({
                 opportunityName: "",
                 customerId: "",
-                stageId: "PROSPECTING",
+                stageId: "",
                 amount: 0,
                 useAt: "Y",
             });
@@ -125,7 +121,7 @@ export function OpportunitySheet({ open, onOpenChange, opportunity, onSuccess }:
                     opportunityId: opportunity.opportunityId,
                     opportunityUpdateRequest: {
                         opportunityName: values.opportunityName,
-                        customerId: values.customerId,
+                        // customerId is not updatable
                         contactId: values.contactId,
                         stageId: values.stageId,
                         amount: values.amount,
@@ -234,9 +230,9 @@ export function OpportunitySheet({ open, onOpenChange, opportunity, onSuccess }:
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                {STAGES.map((stage) => (
-                                                    <SelectItem key={stage.value} value={stage.value}>
-                                                        {stage.label}
+                                                {stages.map((stage) => (
+                                                    <SelectItem key={stage.stageId} value={stage.stageId!}>
+                                                        {stage.stageName}
                                                     </SelectItem>
                                                 ))}
                                             </SelectContent>
